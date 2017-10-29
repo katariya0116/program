@@ -1,38 +1,38 @@
-#include <windows.h>
+ï»¿#include <windows.h>
 #include <crtdbg.h>
 
 
 HWND g_hWnd = NULL;
-LARGE_INTEGER g_cntTimer = { 0 };//ŠÔŒv‘ª—pƒJƒEƒ“ƒ^[
+LARGE_INTEGER g_cntTimer = { 0 };//æ™‚é–“è¨ˆæ¸¬ç”¨ã‚«ã‚¦ãƒ³ã‚¿ãƒ¼
 
 HRESULT InitWindow(HINSTANCE hInstance, int nCmdShow);
 LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM);
 
-// wWinMain •¶š—ñ‚ğƒ†ƒjƒR[ƒh‚É‚·‚éê‡‚ÌƒƒCƒ“ŠÖ”
+// wWinMain æ–‡å­—åˆ—ã‚’ãƒ¦ãƒ‹ã‚³ãƒ¼ãƒ‰ã«ã™ã‚‹å ´åˆã®ãƒ¡ã‚¤ãƒ³é–¢æ•°
 int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLine, int nCmdShow)
 {
-	UNREFERENCED_PARAMETER(hPrevInstance);//ˆø”–¢g—p‚ÌWarnig‘Îô
+	UNREFERENCED_PARAMETER(hPrevInstance);//å¼•æ•°æœªä½¿ç”¨ã®Warnigå¯¾ç­–
 	UNREFERENCED_PARAMETER(lpCmdLine);
 
-	//ƒƒ‚ƒŠƒŠ[ƒNƒfƒoƒbƒO
+	//ãƒ¡ãƒ¢ãƒªãƒªãƒ¼ã‚¯ãƒ‡ãƒãƒƒã‚°
 #ifdef _DEBUG	
 	_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
 #endif
 
-	//ƒEƒCƒ“ƒhƒEì¬
+	//ã‚¦ã‚¤ãƒ³ãƒ‰ã‚¦ä½œæˆ
 	if (FAILED(InitWindow(hInstance, nCmdShow))) {
-		return 0;//ì¬¸”s
+		return 0;//ä½œæˆå¤±æ•—
 	}
 
-	//ƒvƒƒOƒ‰ƒ€‚Ì‰Šú‰»‚È‚Ç
+	//ãƒ—ãƒ­ã‚°ãƒ©ãƒ ã®åˆæœŸåŒ–ãªã©
 
 
-	// ŠÔŒv‘ª—pƒJƒEƒ“ƒ^[
+	// æ™‚é–“è¨ˆæ¸¬ç”¨ã‚«ã‚¦ãƒ³ã‚¿ãƒ¼
 	LARGE_INTEGER cntfreq;
-	QueryPerformanceFrequency(&cntfreq);//ƒJƒEƒ“ƒ^[‚Ìü”g”
-	QueryPerformanceCounter(&g_cntTimer);//ƒJƒEƒ“ƒ^[æ“¾
+	QueryPerformanceFrequency(&cntfreq);//ã‚«ã‚¦ãƒ³ã‚¿ãƒ¼ã®å‘¨æ³¢æ•°
+	QueryPerformanceCounter(&g_cntTimer);//ã‚«ã‚¦ãƒ³ã‚¿ãƒ¼å–å¾—
 
-										 // ƒƒbƒZ[ƒWƒ‹[ƒv
+										 // ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸ãƒ«ãƒ¼ãƒ—
 	MSG msg = { 0 };
 	while (WM_QUIT != msg.message) {
 		if (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE)) {
@@ -40,34 +40,34 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 			DispatchMessage(&msg);
 		}
 		else {
-			//ŒJ‚è•Ô‚µŒÄ‚Ño‚³‚ê‚éƒƒCƒ“ˆ—
+			//ç¹°ã‚Šè¿”ã—å‘¼ã³å‡ºã•ã‚Œã‚‹ãƒ¡ã‚¤ãƒ³å‡¦ç†
 
 
-			//60FPSŒÅ’è
+			//60FPSå›ºå®š
 			const float fps = 60.0f;
 			while (1) {
 				LARGE_INTEGER count;
 				QueryPerformanceCounter(&count);
-				long long cnttime = count.QuadPart - g_cntTimer.QuadPart;//Œo‰ßŠÔ(ƒJƒEƒ“ƒgj
-				float time = float(double(cnttime) / double(cntfreq.QuadPart));//Œo‰ßŠÔ(•bj
+				long long cnttime = count.QuadPart - g_cntTimer.QuadPart;//çµŒéæ™‚é–“(ã‚«ã‚¦ãƒ³ãƒˆï¼‰
+				float time = float(double(cnttime) / double(cntfreq.QuadPart));//çµŒéæ™‚é–“(ç§’ï¼‰
 				if (time >= 1.0f / fps) {
 					g_cntTimer = count;
 					break;
 				}
 				else {
-					// ’·ŠÔ‘Ò‚Âê‡CPU‚ğè—L‚µ‚È‚¢‚æ‚¤‚É‚·‚é
+					// é•·æ™‚é–“å¾…ã¤å ´åˆCPUã‚’å æœ‰ã—ãªã„ã‚ˆã†ã«ã™ã‚‹
 					float wait_time = 1.0f / fps - time;
 					if (wait_time > 0.002f) {
 						int wait_milli = static_cast<int>(wait_time*1000.0f);
 						Sleep(DWORD(wait_milli - 1));
-						//‘Ò‚¿ŠÔ‚ª1ƒ~ƒŠ•bˆÈ“à‚É‚È‚é‚Ü‚Å‘Ò‚Â
+						//å¾…ã¡æ™‚é–“ãŒ1ãƒŸãƒªç§’ä»¥å†…ã«ãªã‚‹ã¾ã§å¾…ã¤
 					}
 				}
 			}
 		}
 	}
 
-	//I—¹ˆ—
+	//çµ‚äº†å‡¦ç†
 
 	return 1;
 }
@@ -91,7 +91,7 @@ HRESULT InitWindow(HINSTANCE hInstance, int nCmdShow)
 	if (!RegisterClassEx(&wcex)) {
 		return E_FAIL;
 	}
-	//ƒEƒCƒ“ƒhƒE‚ÌƒNƒ‰ƒCƒAƒ“ƒg—Ìˆæi=DirectX‚Ì•`‰æ—Ìˆæj‚ğw’è
+	//ã‚¦ã‚¤ãƒ³ãƒ‰ã‚¦ã®ã‚¯ãƒ©ã‚¤ã‚¢ãƒ³ãƒˆé ˜åŸŸï¼ˆ=DirectXã®æç”»é ˜åŸŸï¼‰ã‚’æŒ‡å®š
 	RECT rc = { 0, 0, 640, 480 };
 	AdjustWindowRect(&rc, WS_OVERLAPPEDWINDOW, FALSE);
 
